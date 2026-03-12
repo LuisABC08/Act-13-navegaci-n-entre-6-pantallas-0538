@@ -1,134 +1,169 @@
 import 'package:flutter/material.dart';
+import 'package:myapp/main.dart';
 
-class Pantalla3 extends StatelessWidget {
-  const Pantalla3({super.key});
+class PantallaInicio extends StatelessWidget {
+  const PantallaInicio({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFF121212),
+      // Mantenemos el menú lateral funcional
+      drawer: const MenuLateral(),
+
       appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.white),
-          onPressed: () => Navigator.pop(context), // Vuelve al Inicio
-        ),
-        title: const Text(
-          'Comida',
-          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
-        ),
-        centerTitle: true,
+        title: const Text('Inicio'),
         actions: [
-          // AHORA LA CAMPANA TE LLEVA A LOS PLANES (Pantalla 2)
+          // Cambiamos el Icon por un IconButton para darle funcionalidad
           IconButton(
-            icon: const Icon(Icons.notifications_none, color: Colors.white),
+            icon: const Icon(Icons.notifications_none),
             onPressed: () {
-              Navigator.pushNamed(context, '/pantalla3'); // Ruta hacia Planes
+              // Navegación a la pantalla de comida desde la campana
+              Navigator.pushNamed(context, '/comida');
             },
           ),
-          const SizedBox(width: 10),
+          const SizedBox(width: 5), // Ajustado un poco el espacio
         ],
       ),
       body: SingleChildScrollView(
-        padding: const EdgeInsets.symmetric(horizontal: 25),
+        padding: const EdgeInsets.all(20),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const SizedBox(height: 10),
-
-            // El icono de menú verde de tu dibujo
+            const Text(
+              'Hola, Luis Alberto Cazares Banda del 6-i ',
+              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+            ),
+            const Text(
+              'Bienvenido de nuevo',
+              style: TextStyle(color: Colors.white54),
+            ),
+            const SizedBox(height: 25),
+            const Text(
+              'Tu Plan de Hoy',
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            ),
             const SizedBox(height: 15),
 
-            const Text(
-              'Huevo Con Espinaca',
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 28,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            const SizedBox(height: 20),
-
-            // Contenedor de imagen con el vaso de agua
-            Container(
-              width: double.infinity,
-              height: 250,
-              decoration: BoxDecoration(
-                color: const Color(0xFF2C2C2C),
-                borderRadius: BorderRadius.circular(25),
-                image: const DecorationImage(
-                  image: NetworkImage(
-                    'https://images.unsplash.com/photo-1525351484163-7529414344d8?q=80&w=500',
-                  ),
-                  fit: BoxFit.cover,
-                ),
-              ),
-              child: Stack(
+            // Fila de Comidas (Scroll Horizontal)
+            SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              child: Row(
                 children: [
-                  Positioned(
-                    bottom: 15,
-                    right: 15,
-                    child: Container(
-                      padding: const EdgeInsets.all(8),
-                      decoration: BoxDecoration(
-                        color: Colors.blue.withOpacity(0.2),
-                        borderRadius: BorderRadius.circular(10),
-                        border: Border.all(
-                          color: Colors.blueAccent.withOpacity(0.5),
-                        ),
-                      ),
-                      child: const Icon(
-                        Icons.local_drink,
-                        color: Colors.blueAccent,
-                        size: 28,
-                      ),
-                    ),
+                  _tarjetaComida(
+                    context,
+                    'Desayuno',
+                    '350 cal.',
+                    'Smoothie Bowl',
+                    'https://images.unsplash.com/photo-1525351484163-7529414344d8?q=80&w=2080&auto=format&fit=crop',
+                  ),
+                  _tarjetaComida(
+                    context,
+                    'Almuerzo',
+                    '600 cal.',
+                    'Pollo a la Parrilla',
+                    'https://images.unsplash.com/photo-1504674900247-0877df9cc836?q=80&w=2070&auto=format&fit=crop',
+                  ),
+                  _tarjetaComida(
+                    context,
+                    'Cena',
+                    '400 cal.',
+                    'Ensalada Quinoa',
+                    'https://images.unsplash.com/photo-1512621776951-a57141f2eefd?q=80&w=2070&auto=format&fit=crop',
                   ),
                 ],
               ),
             ),
 
-            const SizedBox(height: 35),
-            const Text(
-              'Ingredientes',
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 22,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            const SizedBox(height: 5),
-            const Divider(
-              color: Color(0xFFC0FF00),
-              thickness: 3,
-              endIndent: 280,
-            ),
-
-            const SizedBox(height: 20),
-            _buildIngrediente('2 Huevos orgánicos'),
-            _buildIngrediente('1 Taza de espinacas frescas'),
-            _buildIngrediente('Sal y pimienta al gusto'),
-            _buildIngrediente('Aceite de oliva extra virgen'),
-            const SizedBox(height: 40),
+            const SizedBox(height: 25),
+            _botonOpcion(Icons.bar_chart, 'Progreso Semanal'),
+            _botonOpcion(Icons.restaurant_menu, 'Recetas Saludables'),
           ],
         ),
       ),
     );
   }
 
-  Widget _buildIngrediente(String texto) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 15),
+  Widget _tarjetaComida(
+    BuildContext context,
+    String tiempo,
+    String cal,
+    String desc,
+    String imageUrl,
+  ) {
+    return Container(
+      width: 160,
+      margin: const EdgeInsets.only(right: 15),
+      decoration: BoxDecoration(
+        color: const Color(0xFF1E1E1E),
+        borderRadius: BorderRadius.circular(20),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          ClipRRect(
+            borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
+            child: Image.network(
+              imageUrl,
+              height: 90,
+              width: double.infinity,
+              fit: BoxFit.cover,
+              errorBuilder: (context, error, stackTrace) => Container(
+                height: 90,
+                color: Colors.grey[800],
+                child: const Icon(
+                  Icons.broken_image,
+                  color: Colors.grey,
+                  size: 40,
+                ),
+              ),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(12.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  tiempo,
+                  style: const TextStyle(fontWeight: FontWeight.bold),
+                ),
+                const SizedBox(height: 4),
+                Text(
+                  cal,
+                  style: const TextStyle(
+                    color: Color(0xFFC0FF00),
+                    fontSize: 12,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+                const SizedBox(height: 4),
+                Text(
+                  desc,
+                  style: const TextStyle(fontSize: 10, color: Colors.white54),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _botonOpcion(IconData icono, String titulo) {
+    return Container(
+      margin: const EdgeInsets.only(bottom: 10),
+      padding: const EdgeInsets.all(15),
+      decoration: BoxDecoration(
+        color: const Color(0xFF1E1E1E),
+        borderRadius: BorderRadius.circular(15),
+      ),
       child: Row(
         children: [
-          const Icon(
-            Icons.check_circle_outline,
-            color: Color(0xFFC0FF00),
-            size: 20,
-          ),
+          Icon(icono, color: Colors.white),
           const SizedBox(width: 15),
-          Text(texto, style: const TextStyle(color: Colors.grey, fontSize: 17)),
+          Text(titulo, style: const TextStyle(fontWeight: FontWeight.w500)),
+          const Spacer(),
+          const Icon(Icons.chevron_right, color: Colors.white54),
         ],
       ),
     );
